@@ -1,3 +1,4 @@
+README in process with the help of LLM.
 # 🧱 SwiftBlockchainExample
 
 An experimental project built in **Swift** that implements a **basic blockchain** from scratch.  
