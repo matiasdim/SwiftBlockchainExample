@@ -8,7 +8,7 @@ Its goal is to provide a hands-on way to understand how blocks, hashing, and imm
 
 ## 🎯 Purpose
 
-This project is **not a production-ready blockchain**, but rather an educational base to explore the core concepts behind technologies like **Bitcoin**, **Ethereum**, and other distributed networks.
+This project is an educational base to explore the core concepts behind technologies like **Bitcoin**, **Ethereum**, and other distributed networks.
 
 It serves as the first step in a broader journey to explore the intersection between **iOS development and Blockchain/Web3**.
 
@@ -19,7 +19,6 @@ It serves as the first step in a broader journey to explore the intersection bet
 - 100% **Swift** implementation  
 - **No external dependencies**  
 - Uses **SHA256 hashing** to link blocks  
-- Simple, readable, and extendable design  
 - Great starting point for experiments with **WalletConnect**, **transaction signing**, and **smart contract integration**
 
 ---
@@ -41,27 +40,25 @@ The core logic lives in the `Block` and `Blockchain` structures, which handle bl
 
 ```swift
 struct Block {
-    let index: Int
-    let timestamp: Date
+   let index: Int
+    let timestamp: TimeInterval
     let data: String
     let previousHash: String
-    let hash: String
+    var nonce: Int
+    var hash: String
 }
 ```
 
 ```swift
-class Blockchain {
-    private(set) var chain: [Block] = []
+final class Blockchain: ObservableObject {
+    @Published private(set) var chain: [Block] = []
     
     func addBlock(data: String) {
-        let previousHash = chain.last?.hash ?? "0"
-        let newBlock = Block(
-            index: chain.count,
-            timestamp: Date(),
-            data: data,
-            previousHash: previousHash
-        )
-        chain.append(newBlock)
+        let previousBlock = latest()
+        let new = Block(index: previousBlock.index, data: data, previuosHash: previousBlock.hash, difficulty: difficulty)
+        DispatchQueue.main.async { [weak self] in
+            self?.chain.append(new)
+        }
     }
 }
 ```
@@ -82,30 +79,7 @@ This repository will serve as the foundation for future experiments:
 
 ---
 
-## 🧰 Requirements
-
-- Xcode 16 or later  
-- Swift 5.9+  
-- macOS Sonoma or later  
-
----
-
-## 👨‍💻 Author
-
-**Matías Gil**  
-Senior iOS Engineer with 12 years of experience building native apps.  
-Currently exploring the convergence of **Swift + Blockchain/Web3**.
-
-- 🐙 [GitHub](https://github.com/tuusuario)  
-- 💼 [LinkedIn](https://linkedin.com/in/tuusuario) *(optional)*
-
----
-
 ## ⚙️ License
 
 This project is released for **educational and experimental purposes**.  
-Feel free to use, modify, or extend it — attribution is appreciated.
-
----
-
-> “Understanding how something works inside is the first step to reinventing it.”
+Feel free to use, modify, or extend it.
